@@ -14,15 +14,12 @@ const FormLogin = () => {
 			password: e.target.password.value,
 		};
 
-		console.log(data);
-
 		login(data, (status, res) => {
 			if (status) {
 				localStorage.setItem('token', res);
 				window.location.href = '/product';
 			} else {
 				setLoginFailed(res.response.data);
-				// window.location.href = '/';
 			}
 		});
 	};

@@ -16,22 +16,23 @@ const ProductPage = () => {
 	};
 
 	useEffect(() => {
-		getProducts((data) => {
-			setProducts(data);
-		});
+		const token = localStorage.getItem('token');
+		if (!token) {
+			window.location.href = '/';
+		} else {
+			getProducts((data) => {
+				setProducts(data);
+			});
+			setUser(getUserName(token));
+		}
 	}, []);
 
-	useEffect(() => {
-		const token = localStorage.getItem('token');
-		if (token) {
-			setUser(getUserName(token));
-		} else {
-			window.location.href = '/';
-		}
-	});
+	if (!user) {
+		return null;
+	}
 
 	return (
-		<>
+		<div>
 			<div className='flex justify-end h-12 bg-blue-600 sticky top-0 text-white items-center px-10'>
 				<p>{user}</p>
 				<Button
@@ -53,7 +54,7 @@ const ProductPage = () => {
 						</CardProduct>
 					))}
 			</div>
-		</>
+		</div>
 	);
 };
 
