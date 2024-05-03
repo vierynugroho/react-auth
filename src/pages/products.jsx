@@ -2,9 +2,18 @@ import { useState, useEffect } from 'react';
 import Button from '../components/Elements/Button';
 import CardProduct from '../components/Fragments/CardProduct';
 import { getProducts } from '../services/product';
+import { getUserName } from '../services/auth';
 
 const ProductPage = () => {
 	const [products, setProducts] = useState([]);
+	const [user, setUser] = useState('');
+
+	const handleLogout = () => {
+		localStorage.removeItem('token');
+		localStorage.removeItem('password');
+		localStorage.removeItem('email');
+		window.location.href = '/';
+	};
 
 	useEffect(() => {
 		getProducts((data) => {
@@ -12,12 +21,23 @@ const ProductPage = () => {
 		});
 	}, []);
 
+	useEffect(() => {
+		const token = localStorage.getItem('token');
+		if (token) {
+			setUser(getUserName(token));
+		} else {
+			window.location.href = '/';
+		}
+	});
+
 	return (
 		<>
 			<div className='flex justify-end h-12 bg-blue-600 sticky top-0 text-white items-center px-10'>
+				<p>{user}</p>
 				<Button
 					type='button'
 					classname='ml-5 bg-black'
+					onClick={handleLogout}
 				>
 					Logout
 				</Button>
